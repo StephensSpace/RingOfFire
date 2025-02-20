@@ -1,1 +1,19 @@
-<p>game works!</p>
+<app-playerbar class="playerPosition" 
+*ngFor="let player of game?.players; let p = index"  
+[ngStyle]="{'top.%': p === 0 ? 30 : (p * 15) + 30}"
+[name] = "player">
+</app-playerbar>
+
+<div class="gameField">
+
+    <div class="cardStack">
+        <img [ngStyle]="{'right.px': i *5}" *ngFor="let item of [0,1,2,3]; let i = index"
+            src="img/cards/card_cover.png">
+
+        <img class="topCard" (click)="PickCard()" src="img/cards/card_cover.png" style="right: 20px;">
+
+        <img class="pickCard" *ngIf="pickCardAnimation" [src]="'img/cards/' + currentCard + '.png'">
+
+        <img class="pickCard" *ngFor="let card of game?.playedCard; let i = index" [src]="'img/cards/' + card + '.png'">
+    </div>
+</div>
