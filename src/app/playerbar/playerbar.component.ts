@@ -9,5 +9,6 @@ import { Component, Input } from '@angular/core';
 export class PlayerbarComponent {
   
   @Input() name: string = 'Player';
+  @Input() playerActive: boolean = false;
 
 }

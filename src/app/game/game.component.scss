@@ -1,3 +1,24 @@
+
+button[mat-fab] {
+    border-radius: 50% !important;
+    background-color: orange;
+    &:hover {
+        background-color: darkorange;
+        mat-icon {
+            color: black;  
+          } 
+    }
+}
+
+mat-icon {
+    color: white;   
+}
+
+button {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+}
 .gameField {
     width: 100vw;
     height: 100vh;
