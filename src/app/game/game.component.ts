@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
+import { AktionskarteComponent } from '../aktionskarte/aktionskarte.component';
 
 
 
@@ -18,7 +19,7 @@ import { DialogComponent } from '../dialog/dialog.component';
     PlayerbarComponent, MatIconModule,
     MatButtonModule, MatInputModule,
     MatFormFieldModule, FormsModule,
-    DialogComponent],
+    DialogComponent, AktionskarteComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
