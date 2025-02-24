@@ -28,11 +28,9 @@ export class AktionskarteComponent {
   description: string = '';
   standartText: string = 'Please Reload the Page to start again'
   @Input() card: string | undefined = '';
-  @Input() gameOver!: Signal<boolean>
-  value: boolean = this.gameOver();
+  value: boolean = false
 
   ngOnChanges() {
-    
     if (!this.card) {  // Falls keine Karte gesetzt wurde, Standardwerte verwenden
       this.title = 'Please Pick a Card';
       this.description = '';

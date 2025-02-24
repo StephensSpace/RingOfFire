@@ -32,7 +32,6 @@ export class GameComponent {
   pickCardAnimation: boolean = false;
   currentCard: string | undefined
   game?: Game
-  readonly gameOver = signal(false);
 
 
   constructor() {
@@ -66,8 +65,7 @@ export class GameComponent {
         }, 1500);
       }
     } else {
-      this.gameOver.set(true); 
-      console.log('gameOver')
+      this.newGame();
     }
   }
 
