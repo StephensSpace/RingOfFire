@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, model, inject } from '@angular/core';
+import { Component, signal, model, inject, ChangeDetectorRef } from '@angular/core';
 import { Game } from '../../models/game';
 import { PlayerbarComponent } from '../playerbar/playerbar.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,6 +32,7 @@ export class GameComponent {
   pickCardAnimation: boolean = false;
   currentCard: string | undefined
   game?: Game
+  readonly gameOver = signal(false);
 
 
   constructor() {
@@ -45,22 +46,28 @@ export class GameComponent {
   }
 
   PickCard() {
-    if (!this.pickCardAnimation) {
-      this.currentCard = this.game?.stack.pop();
-      if (this.currentCard !== undefined) {
-        this.game?.playedCard.push(this.currentCard);
-      }
-      if (this.game?.currentPlayer !== undefined) {
-        if (this.game?.currentPlayer < this.game?.players.length -1) { 
-          this.game.currentPlayer++; 
-        } else {
-          this.game.currentPlayer = 0;
+    let stacksize = this.game?.stack.length
+    if (stacksize && stacksize > 0) {
+      if (!this.pickCardAnimation) {
+        this.currentCard = this.game?.stack.pop();
+        if (this.currentCard !== undefined) {
+          this.game?.playedCard.push(this.currentCard);
         }
+        if (this.game?.currentPlayer !== undefined) {
+          if (this.game?.currentPlayer < this.game?.players.length - 1) {
+            this.game.currentPlayer++;
+          } else {
+            this.game.currentPlayer = 0;
+          }
+        }
+        this.pickCardAnimation = true;
+        setTimeout(() => {
+          this.pickCardAnimation = false;
+        }, 1500);
       }
-      this.pickCardAnimation = true;
-      setTimeout(() => {
-        this.pickCardAnimation = false;
-      }, 1500);
+    } else {
+      this.gameOver.set(true); 
+      console.log('gameOver')
     }
   }
 

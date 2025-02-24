@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input , Signal} from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 
 @Component({
@@ -26,14 +26,24 @@ export class AktionskarteComponent {
 
   title: string = '';
   description: string = '';
+  standartText: string = 'Please Reload the Page to start again'
   @Input() card: string | undefined = '';
+  @Input() gameOver!: Signal<boolean>
+  value: boolean = this.gameOver();
 
   ngOnChanges() {
-    if (this.card !== undefined) { 
-      let parts = this.card.split('_') 
+    
+    if (!this.card) {  // Falls keine Karte gesetzt wurde, Standardwerte verwenden
+      this.title = 'Please Pick a Card';
+      this.description = '';
+      return;
+    } else {
+      let parts = this.card.split('_');
       let numberValue = parseInt(parts[1], 10);
-      this.title = this.cardAction[numberValue-1].title
-      this.description = this.cardAction[numberValue-1].description
+      if (!isNaN(numberValue) && this.cardAction[numberValue - 1]) {
+        this.title = this.cardAction[numberValue - 1].title;
+        this.description = this.cardAction[numberValue - 1].description;
+      }
     }
   }
 
