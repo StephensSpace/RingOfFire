@@ -23,14 +23,14 @@ const firebaseConfig = {
 export class FirebaseService {
     public app = initializeApp(firebaseConfig);
     public firestore = getFirestore(this.app);
-    //unSubGames;
+    unSubGames;
 
     constructor() {
-        //this.unSubGames = this.subGamesList();
+        this.unSubGames = this.subGamesList();
     }
 
     ngonDestroy() {
-        //this.unSubGames();
+        this.unSubGames();
         
       }
 
