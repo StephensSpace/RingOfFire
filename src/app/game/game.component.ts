@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, model, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, signal, model, inject, ChangeDetectorRef, Inject } from '@angular/core';
 import { Game } from '../../models/game';
 import { PlayerbarComponent } from '../playerbar/playerbar.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +10,8 @@ import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { AktionskarteComponent } from '../aktionskarte/aktionskarte.component';
+import { FirebaseService } from '../FirebaseService/firebase.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 
@@ -20,12 +22,14 @@ import { AktionskarteComponent } from '../aktionskarte/aktionskarte.component';
     MatButtonModule, MatInputModule,
     MatFormFieldModule, FormsModule,
     DialogComponent, AktionskarteComponent],
+    providers: [FirebaseService],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
 
 
 export class GameComponent {
+  private firebaseService = inject(FirebaseService);
   readonly animal = signal('');
   readonly name = model('');
   readonly dialog = inject(MatDialog);
@@ -33,15 +37,23 @@ export class GameComponent {
   currentCard: string | undefined
   game?: Game
 
-
-  constructor() {
+ 
+  constructor(private route: ActivatedRoute) {
     this.newGame();
+    this.route.paramMap.subscribe((params) => {
+      const id: string = params.get('id') as string
+      this.firebaseService.subCurrentGame(id)
+    });
     this.currentCard = '';
+    console.log(this.firebaseService.firestore);
   }
 
-
-  newGame() {
+  
+  newGame() { 
     this.game = new Game();
+    let object: {} | undefined = this.game?.toJson()
+    this.firebaseService.addGame(object);
+    
   }
 
   PickCard() {
@@ -81,5 +93,6 @@ export class GameComponent {
       }
     });
   }
+
 
 }

@@ -7,11 +7,23 @@ export class Game {
     constructor() {
         for (let i=1; i <= 13; i++) {
             this.stack.push('ace_' + i)
+            this.stack.push('clubs_' + i)
+            this.stack.push('diamonds_' + i)
+            this.stack.push('hearts_' + i)
             
         };
         this.shuffle(this.stack);
         this.playedCard = [];
     }
+
+    toJson() {
+        return {
+          players: this.players,
+          stack: this.stack,
+          playedCard: this.playedCard,
+          currentPlayer: this.currentPlayer
+        }
+      }
 
     shuffle(array: string[]) {
         let currentIndex = array.length;
