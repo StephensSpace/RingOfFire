@@ -22,7 +22,7 @@ import { ActivatedRoute } from '@angular/router';
     MatButtonModule, MatInputModule,
     MatFormFieldModule, FormsModule,
     DialogComponent, AktionskarteComponent],
-    providers: [FirebaseService],
+  providers: [FirebaseService],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
@@ -36,24 +36,36 @@ export class GameComponent {
   pickCardAnimation: boolean = false;
   currentCard: string | undefined
   game?: Game
+  currentGame: any;
+  unsubscribe;
 
- 
+
   constructor(private route: ActivatedRoute) {
     this.newGame();
-    this.route.paramMap.subscribe((params) => {
+    this.unsubscribe = this.route.paramMap.subscribe((params) => {
       const id: string = params.get('id') as string
       this.firebaseService.subCurrentGame(id)
+      this.firebaseService.currentGame$.subscribe((game) => {
+        this.currentGame = game;
+        console.log('Aktuelles Spiel:', this.currentGame);
+        if(this.game){ 
+          this.game.players = game?.['players'] 
+          this.game.stack = game?.['stack']
+          this.game.playedCard = game?.['playedCard']
+          this.game.currentPlayer = game?.['currentPlayer']
+        }
+      })
     });
     this.currentCard = '';
-    console.log(this.firebaseService.firestore);
+    //console.log(this.firebaseService.firestore);
   }
 
-  
-  newGame() { 
+
+  newGame() {
     this.game = new Game();
     let object: {} | undefined = this.game?.toJson()
     this.firebaseService.addGame(object);
-    
+
   }
 
   PickCard() {

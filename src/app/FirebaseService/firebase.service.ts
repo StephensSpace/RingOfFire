@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, addDoc, getDocs, doc, getDoc, onSnapshot } from '@angular/fire/firestore';
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { Observable } from 'rxjs';
+import { getFirestore, DocumentData } from 'firebase/firestore';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Game } from '../../models/game';
 
 // Firebase Initialisierung
@@ -23,6 +23,8 @@ const firebaseConfig = {
 export class FirebaseService {
     public app = initializeApp(firebaseConfig);
     public firestore = getFirestore(this.app);
+    private currentGameSubject = new BehaviorSubject<DocumentData | null>(null);
+    currentGame$ = this.currentGameSubject.asObservable();
     unSubGames;
 
     constructor() {
@@ -31,39 +33,42 @@ export class FirebaseService {
 
     ngonDestroy() {
         this.unSubGames();
-        
-      }
 
-      subCurrentGame(id: string) {
+    }
+
+    subCurrentGame(id: string) {
         return onSnapshot(this.getSingleDoc(id),
-          (list) => {
-           console.log(list.data())
-          })
-      }
+            (game) => {
+                if (game.exists()) {
+                    this.currentGameSubject.next(game.data()); // Wert setzen
+                } else {
+                    console.error('Game not found!');
+                }
+            })
+    }
 
     subGamesList() {
         return onSnapshot(this.getGamesRef(),
-          (list) => {
-            list.forEach(element => {
-             console.log(element.data())
+            (list) => {
+                list.forEach(element => {
+                });
             });
-          });
-      }
+    }
 
-      async addGame(item: {} | undefined) {
+    async addGame(item: {} | undefined) {
         await addDoc(this.getGamesRef(), item).catch(
-          (err) => { console.error(err) }
+            (err) => { console.error(err) }
         ).then((docRef) => {
-          console.log("Document written with ID:", docRef?.id);
+            console.log("Document written with ID:", docRef?.id);
         })
-      }
+    }
 
     getGamesRef() {
         return collection(this.firestore, 'games');
-      }
+    }
 
-      getSingleDoc(docId: string) {
+    getSingleDoc(docId: string) {
         return doc(collection(this.firestore, 'games'), docId)
-      }
+    }
 
 }
