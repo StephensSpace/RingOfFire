@@ -56,11 +56,12 @@ export class FirebaseService {
     }
 
     async addGame(item: {} | undefined) {
-        await addDoc(this.getGamesRef(), item).catch(
+        const docRef: any = await addDoc(this.getGamesRef(), item).catch(
             (err) => { console.error(err) }
         ).then((docRef) => {
             console.log("Document written with ID:", docRef?.id);
         })
+        return { id: docRef.id, ...item };
     }
 
     getGamesRef() {

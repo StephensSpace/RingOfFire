@@ -41,7 +41,7 @@ export class GameComponent {
 
 
   constructor(private route: ActivatedRoute) {
-    this.newGame();
+    //this.newGame();
     this.unsubscribe = this.route.paramMap.subscribe((params) => {
       const id: string = params.get('id') as string
       this.firebaseService.subCurrentGame(id)
@@ -63,8 +63,7 @@ export class GameComponent {
 
   newGame() {
     this.game = new Game();
-    let object: {} | undefined = this.game?.toJson()
-    this.firebaseService.addGame(object);
+    
 
   }
 
